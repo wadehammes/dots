@@ -1,25 +1,9 @@
 export AWS_PROFILE=staging
 
-# If you come from bash you might have to change your $PATH.
-# export PATH=$HOME/bin:/usr/local/bin:$PATH
-
-# Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
-
-# Set name of the theme to load --- if set to "random", it will
-# load a random theme each time oh-my-zsh is loaded, in which case,
-# to know which specific one was loaded, run: echo $RANDOM_THEME
-# See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="zhann"
-
-# Which plugins would you like to load?
-# Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(git asdf)
-
-source $ZSH/oh-my-zsh.sh
 
 # Set personal aliases, overriding those provided by oh-my-zsh libs,
 # plugins, and themes. Aliases can be placed here, though oh-my-zsh
@@ -31,3 +15,48 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias dc="docker-compose"
 alias rebuild="dc down && dc build && dc run app python manage.py migrate && dc run app ./manage.py seed_data && dc up"
+
+# remove the need for 'cd' for change directory
+setopt autocd
+
+# Autocompletion
+autoload -U colors && colors
+setopt prompt_subst
+
+# Theme
+autoload -Uz vcs_info
+
+zstyle ':vcs_info:*' stagedstr ' %F{green}●●'
+zstyle ':vcs_info:*' unstagedstr ' %F{yellow}●'
+zstyle ':vcs_info:*' check-for-changes true
+zstyle ':vcs_info:svn:*' branchformat '%b'
+zstyle ':vcs_info:svn:*' formats ' [%b%F{1}:%F{11}%i%c%u%B%F{green}]'
+zstyle ':vcs_info:*' enable git svn
+
+theme_precmd () {
+  if [[ -z $(git ls-files --other --exclude-standard 2> /dev/null) ]]; then
+    zstyle ':vcs_info:git:*' formats ' [%b%c%u%F{green}]'
+  else
+    zstyle ':vcs_info:git:*' formats ' [%b%c%u%F{red}]'
+  fi
+
+  vcs_info
+}
+
+# Rewrite current working directory to mimic Fish
+_collapsed_wd() {
+  echo $(pwd | perl -pe "
+   BEGIN {
+      binmode STDIN,  ':encoding(UTF-8)';
+      binmode STDOUT, ':encoding(UTF-8)';
+    }; s|^$HOME|~|g; s|/([^/])[^/]*(?=/)|/\$1|g
+  ")
+}
+
+setopt prompt_subst
+PROMPT='%F{blue}$(_collapsed_wd)%F{green}${vcs_info_msg_0_}%F{magenta} %{$reset_color%}% %F{white}$ '
+
+autoload -U add-zsh-hook
+add-zsh-hook precmd theme_precmd
+
+test -d "$HOME/.tea" && source <("$HOME/.tea/tea.xyz/v*/bin/tea" --magic=zsh --silent)
