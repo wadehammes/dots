@@ -54,7 +54,7 @@ _collapsed_wd() {
 }
 
 setopt prompt_subst
-PROMPT='%F{blue}$(_collapsed_wd)%F{green}${vcs_info_msg_0_}%F{magenta} %F{white}$ %{$reset_color%}% '
+PROMPT='%F{blue}$(_collapsed_wd)%F{gray}${vcs_info_msg_0_} %F{white}$ %{$reset_color%}% '
 
 autoload -U add-zsh-hook
 add-zsh-hook precmd theme_precmd
