@@ -1,0 +1,52 @@
+[user]
+        user = Wade Hammes
+        email = wade.hammes@gmail.com
+[core]
+        editor = vim
+        excludesfile = /Users/wade/.gitignore_global
+        autocrlf = input
+[push]
+        default = matching
+[pull]
+        default = matching
+[status]
+        submoduleSummary = true
+[alias]
+        unstage = reset HEAD --
+        last = log -1 HEAD
+        leaf = log --graph --decorate --pretty=oneline --abbrev-commit master origin/master
+        ls = log --pretty=format:\"%C(yellow)%h%Cred%d\\\\ %Creset%s%Cblue\\\\ [%cn]\" --decorate
+        f = !git ls-files | grep -i
+        grep = grep -Ii
+        gr = grep -Ii
+        cp = cherry-pick
+        st = status -s
+        cl = clone
+        ci = commit
+        co = checkout
+        br = branch
+        diff = diff --word-diff
+        dc = diff --cached
+        r1 = reset HEAD^
+        r2 = reset HEAD^^
+        rh = reset --hard
+        rh1 = reset HEAD^ --hard
+        rh2 = reset HEAD^^ --hard
+        sl = stash list
+        sa = stash apply
+        ss = stash save
+        rmb = !git branch --merged | grep -v '*' | xargs -n 1 git branch -d
+        branch-name = !git rev-parse --abbrev-ref HEAD
+        publish = !git push -u origin $(git branch-name)
+        unpublish = !git push origin :$(git branch-name)
+        commend = !git add -A && git commit --amend -C HEAD
+        l = log --pretty=format:"%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\[%cn]" --decorate --date=short
+        cob = checkout -b
+        cam = commit -a -m
+        s = status -s
+        g = grep --extended-regexp --break --heading --line-number
+        acoma = !git add -A && git commit -m
+        done = !git checkout master && git pull origin master && git branch -D $(git rev-parse --abbrev-ref @{-1})
+        main = !git checkout main && git pull origin main && git branch -D $(git rev-parse --abbrev-ref @{-1})
+        staple = !git add . && git stash && git pull origin $(git branch-name) && git stash pop
+        su = !git stash && git checkout master && git pull
